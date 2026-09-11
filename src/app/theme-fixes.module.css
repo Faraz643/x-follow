@@ -4,8 +4,8 @@
   flex-direction: column;
 }
 
-/* Keep the conversion block on the same content axis as the hero copy. */
 .heroCta {
+  position: relative;
   width: 100% !important;
   margin: 32px 0 0 !important;
   padding: 0 !important;
@@ -18,6 +18,18 @@
   align-items: flex-start !important;
   justify-content: flex-start !important;
   gap: 0 !important;
+}
+.heroCta::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  border-radius: 999px;
+  background: var(--line);
+  opacity: .9;
+  pointer-events: none;
 }
 .heroCta > div {
   display: grid !important;
@@ -212,18 +224,13 @@
 :global(html[data-theme="genz"]) .site-footer .creator-name:focus-visible { color: #ff4fa3 !important; }
 :global(html[data-theme="genz"]) .site-footer .creator-x { background: #bff36b; border: 2px solid #171717; color: #171717 !important; border-radius: 9px; box-shadow: 2px 2px 0 #171717; }
 
-/* Theme-native CTA surfaces while preserving the shared left content axis. */
-:global(html[data-theme="cyberpunk"]) .heroCta { border-left: 2px solid rgba(0,229,255,.45) !important; padding-left: 16px !important; }
-:global(html[data-theme="glass"]) .heroCta { border-left: 2px solid rgba(139,125,255,.45) !important; padding-left: 16px !important; }
-:global(html[data-theme="genz"]) .heroCta { border-left: 3px solid #191919 !important; padding-left: 14px !important; }
-:global(html[data-theme="ghibli"]) .heroCta { border-left: 2px solid #b8c8aa !important; padding-left: 16px !important; }
+:global(html[data-theme="ghibli"]) .heroCta::before { background: #b8c8aa; }
+:global(html[data-theme="cyberpunk"]) .heroCta::before { background: #00e5ff; box-shadow: 0 0 12px rgba(0,229,255,.45); }
+:global(html[data-theme="glass"]) .heroCta::before { background: #8b7dff; box-shadow: 0 0 14px rgba(139,125,255,.4); }
+:global(html[data-theme="genz"]) .heroCta::before { width: 3px; background: #191919; }
 
 @media (max-width: 700px) {
-  .heroCta {
-    margin-top: 26px !important;
-    padding-top: 0 !important;
-    gap: 0 !important;
-  }
+  .heroCta { margin-top: 26px !important; }
   .heroCta > div { gap: 7px !important; }
   .heroListBtn { width: auto; min-width: 180px; }
 }
