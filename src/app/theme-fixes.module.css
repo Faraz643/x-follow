@@ -24,16 +24,16 @@
 .modalScroll::-webkit-scrollbar-track { background: transparent; margin: 12px 0; }
 .modalScroll::-webkit-scrollbar-thumb { background: color-mix(in srgb, var(--accent) 65%, var(--line)); border: 2px solid transparent; background-clip: padding-box; border-radius: 999px; }
 .modalScroll::-webkit-scrollbar-thumb:hover { background: var(--accent); background-clip: padding-box; }
-.site-footer { margin: 64px auto 4px; padding: 18px 4px 4px; border-top: 1px solid var(--line); display: flex; align-items: center; justify-content: center; gap: 9px; color: var(--muted); font-size: 12px; letter-spacing: .01em; transition: color .4s ease, border-color .4s ease; }
+.site-footer { width: 100%; flex-basis: 100%; clear: both; margin: 72px auto 8px; padding: 20px 12px 8px; border-top: 1px solid var(--line); display: flex; align-items: center; justify-content: center; gap: 10px; color: var(--muted); font-size: 13px; line-height: 1.4; letter-spacing: .01em; text-align: center; transition: color .4s ease, border-color .4s ease; }
 .site-footer > span { opacity: .9; }
-.creator-x { width: 29px; height: 29px; display: inline-grid; place-items: center; border: 1px solid var(--line); border-radius: 50%; color: var(--text); background: var(--panel); text-decoration: none; font-size: 14px; font-weight: 900; box-shadow: 0 4px 12px color-mix(in srgb, var(--text) 8%, transparent); transition: transform .2s ease, background .35s ease, color .35s ease, border-color .35s ease; }
-.creator-x:hover { transform: translateY(-2px) rotate(-4deg); color: var(--accent); border-color: var(--accent); }
+.creator-x { width: 30px; height: 30px; flex: 0 0 30px; display: inline-grid; place-items: center; border: 1px solid var(--line); border-radius: 50%; color: var(--text) !important; background: var(--panel); text-decoration: none !important; font-size: 14px; font-weight: 900; line-height: 1; box-shadow: 0 4px 12px color-mix(in srgb, var(--text) 8%, transparent); transition: transform .2s ease, background .35s ease, color .35s ease, border-color .35s ease; }
+.creator-x:hover { transform: translateY(-2px) rotate(-4deg); color: var(--accent) !important; border-color: var(--accent); }
 :global(html[data-theme="ghibli"]) .site-footer { font-family: 'Fraunces', Georgia, serif; color: #667969; border-top-color: #b8c8aa; }
-:global(html[data-theme="ghibli"]) .creator-x { background: #f7f5ea; border-color: #b8c8aa; }
+:global(html[data-theme="ghibli"]) .creator-x { background: #f7f5ea; border-color: #b8c8aa; color: #294b36 !important; }
 :global(html[data-theme="cyberpunk"]) .site-footer { font-family: 'DM Mono', monospace; text-transform: uppercase; letter-spacing: .06em; border-top-color: #263442; }
-:global(html[data-theme="cyberpunk"]) .creator-x { border-radius: 5px; background: #071016; border-color: #00e5ff; color: #00e5ff; box-shadow: 0 0 14px rgba(0,229,255,.16); }
+:global(html[data-theme="cyberpunk"]) .creator-x { border-radius: 5px; background: #071016; border-color: #00e5ff; color: #00e5ff !important; box-shadow: 0 0 14px rgba(0,229,255,.16); }
 :global(html[data-theme="glass"]) .site-footer { color: #b6bbd2; }
-:global(html[data-theme="glass"]) .creator-x { background: rgba(255,255,255,.1); border-color: rgba(255,255,255,.22); backdrop-filter: blur(14px); }
+:global(html[data-theme="glass"]) .creator-x { background: rgba(255,255,255,.1); border-color: rgba(255,255,255,.22); color: #f7f8ff !important; backdrop-filter: blur(14px); }
 :global(html[data-theme="genz"]) .site-footer { font-weight: 700; color: #5f5b55; }
-:global(html[data-theme="genz"]) .creator-x { background: #bff36b; border: 2px solid #171717; color: #171717; border-radius: 9px; box-shadow: 2px 2px 0 #171717; }
-@media (max-width: 700px) { .heroListBtn { width: 100%; } .site-footer { margin-top: 48px; } }
+:global(html[data-theme="genz"]) .creator-x { background: #bff36b; border: 2px solid #171717; color: #171717 !important; border-radius: 9px; box-shadow: 2px 2px 0 #171717; }
+@media (max-width: 700px) { .heroListBtn { width: 100%; } .site-footer { margin-top: 52px; padding-top: 18px; } }
