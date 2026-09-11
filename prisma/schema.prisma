@@ -72,3 +72,12 @@ model Submission {
   @@unique([userId, accountId])
   @@index([categoryId, createdAt])
 }
+
+model Visitor {
+  id         String   @id @default(cuid())
+  visitorKey String   @unique
+  firstSeen  DateTime @default(now())
+  lastSeen   DateTime @updatedAt
+
+  @@index([lastSeen])
+}
