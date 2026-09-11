@@ -1,0 +1,73 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String          @id @default(cuid())
+  email        String          @unique
+  name         String?
+  image        String?
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
+  accounts     XAccount[]      @relation("SubmittedAccounts")
+  submissions  Submission[]
+}
+
+model XAccount {
+  id              String         @id @default(cuid())
+  xUserId         String         @unique
+  username        String         @unique
+  displayName     String
+  profileImageUrl String?
+  bio             String?
+  profileUrl      String
+  verified        Boolean        @default(false)
+  active          Boolean        @default(true)
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+  submittedById   String
+  submittedBy     User           @relation("SubmittedAccounts", fields: [submittedById], references: [id], onDelete: Cascade)
+  submissions     Submission[]
+  categories     AccountCategory[]
+
+  @@index([username])
+  @@index([active, createdAt])
+}
+
+model Category {
+  id          String           @id @default(cuid())
+  name        String           @unique
+  slug        String           @unique
+  description String?
+  createdAt   DateTime         @default(now())
+  accounts    AccountCategory[]
+}
+
+model AccountCategory {
+  accountId  String
+  categoryId String
+  account    XAccount @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@id([accountId, categoryId])
+  @@index([categoryId])
+}
+
+model Submission {
+  id         String   @id @default(cuid())
+  userId     String
+  accountId  String
+  categoryId String
+  createdAt  DateTime @default(now())
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  account    XAccount @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  category  Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, accountId])
+  @@index([categoryId, createdAt])
+}
