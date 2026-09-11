@@ -1,34 +1,53 @@
 # X Follow
 
-A production-oriented directory for discovering X accounts by category and opening their profiles to follow.
+A production-oriented directory for discovering X accounts by category and opening their profiles to follow. The directory does **not** require the paid X API.
 
 ## Stack
 
 - Next.js 15 App Router + TypeScript
 - PostgreSQL + Prisma
-- X OAuth 2.0 + X API v2
-- Signed, HTTP-only session cookie
+- Zod request validation
 - Responsive UI with server API routes
+- Vercel-ready deployment
+
+## How account submission works
+
+A submitter provides an X profile URL, username, display name, optional bio and profile image URL, an email address, and a category. The server validates that the profile URL is an X/Twitter profile and that the URL username matches the submitted handle. The record is then stored in PostgreSQL.
+
+The Follow button opens the public X profile directly. No X API credit, X bearer token, X OAuth client ID, or X client secret is required.
+
+## Environment variables
+
+Only these are required for the current version:
+
+```env
+DATABASE_URL="postgresql://..."
+NEXT_PUBLIC_APP_URL="https://your-domain.vercel.app"
+```
+
+`DATABASE_URL` is your PostgreSQL connection string from Supabase, Neon, or another PostgreSQL provider. `NEXT_PUBLIC_APP_URL` is your deployed Vercel URL.
+
+Do **not** put database passwords, API keys, or secrets into GitHub.
 
 ## Local setup
 
-1. Create a PostgreSQL database.
-2. Copy `.env.example` to `.env` and fill every value.
-3. Create an X developer app with OAuth 2.0 enabled. Add the callback URL from `X_REDIRECT_URI`.
-4. `npm install`
-5. `npx prisma db push`
-6. `npm run dev`
+```bash
+npm install
+npm run dev
+```
+
+The production build runs `prisma generate && prisma db push && next build`, so a fresh PostgreSQL database can be initialized automatically during deployment.
 
 ## Vercel
 
-Import the repository into Vercel. Add the same environment variables in Project Settings → Environment Variables. Vercel runs `prisma generate && next build` automatically through the build script.
+Import the repository into Vercel and add `DATABASE_URL` and `NEXT_PUBLIC_APP_URL` under Project Settings → Environment Variables.
 
-Required variables: `DATABASE_URL`, `X_CLIENT_ID`, `X_CLIENT_SECRET`, `X_BEARER_TOKEN`, `NEXT_PUBLIC_APP_URL`, `X_REDIRECT_URI`, `AUTH_SECRET`.
+Automatic Git deployments are intentionally disabled in `vercel.json`. Create deployments manually from the Vercel dashboard or CLI when you are ready to publish a change.
 
 ## Product behavior
 
-Visitors can browse and search the public directory without signing in. A user signs in with X, selects a category, enters an X handle, and the server validates the profile through X API before storing the profile snapshot and category relationship. The Follow button always opens the canonical X profile in a new tab.
+Visitors can browse and search the public directory without an X account or X API credentials. Anyone submitting an account provides their contact email and category. The account is stored server-side and becomes visible in the shared directory. Duplicate handles update the existing profile snapshot and add/update the category relationship.
 
-## Production hardening
+## Production hardening before public launch
 
-Add rate limiting/WAF to POST endpoints, admin moderation for submissions, scheduled profile refreshes, audit logs, monitoring, backups, and an email/contact mechanism if required. Never expose X client secrets or bearer tokens to the browser.
+Add real user authentication/verification, admin moderation, rate limiting, abuse/report flows, image-host validation, email verification, audit logs, backups, monitoring, and scheduled profile refreshes if/when an X API subscription is introduced.
