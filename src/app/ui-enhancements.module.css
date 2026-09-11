@@ -1,0 +1,99 @@
+.heroActions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.browseBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  min-height: 64px;
+  padding: 16px 24px;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: var(--panel);
+  color: var(--text);
+  font: inherit;
+  font-size: 20px;
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -.02em;
+  cursor: pointer;
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(16px);
+  transition: transform .2s ease, border-color .25s ease, background .25s ease, box-shadow .25s ease;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.browseBtn span {
+  display: inline !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  color: inherit !important;
+  font: inherit !important;
+  line-height: 1 !important;
+}
+
+.browseBtn:hover {
+  transform: translateY(-2px);
+  border-color: var(--accent);
+  box-shadow: 0 14px 32px color-mix(in srgb, var(--accent) 16%, transparent);
+}
+
+.browseBtn:active { transform: translateY(0); }
+.browseBtn:focus-visible { outline: 3px solid color-mix(in srgb, var(--accent2) 60%, transparent); outline-offset: 3px; }
+
+.visitorStat {
+  margin-left: 2px;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.categorySelect {
+  color-scheme: dark;
+  appearance: auto;
+  -webkit-appearance: auto;
+}
+
+.categorySelect option {
+  background: var(--panel-solid);
+  color: var(--text);
+}
+
+:global(html[data-theme="ghibli"]) .categorySelect,
+:global(html[data-theme="genz"]) .categorySelect {
+  color-scheme: light;
+}
+
+:global(html[data-theme="cyberpunk"]) .categorySelect,
+:global(html[data-theme="glass"]) .categorySelect {
+  color-scheme: dark;
+}
+
+:global(html[data-theme="ghibli"]) .categorySelect option,
+:global(html[data-theme="genz"]) .categorySelect option {
+  background: var(--panel-solid);
+  color: var(--text);
+}
+
+:global(html[data-theme="cyberpunk"]) .categorySelect option,
+:global(html[data-theme="glass"]) .categorySelect option {
+  background: var(--panel-solid);
+  color: var(--text);
+}
+
+@media (max-width: 640px) {
+  .heroActions {
+    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .browseBtn {
+    width: 100%;
+  }
+}
