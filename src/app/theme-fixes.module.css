@@ -1,3 +1,22 @@
+.heroCta {
+  margin-top: 30px !important;
+  padding: 18px 20px !important;
+  gap: 22px !important;
+  align-items: center !important;
+}
+.heroCta > div {
+  display: grid !important;
+  gap: 7px !important;
+  min-width: 0;
+}
+.heroCta > div strong {
+  display: block;
+  line-height: 1.25;
+}
+.heroCta > div span {
+  display: block;
+  line-height: 1.5;
+}
 .heroListBtn {
   appearance: none;
   border: 1px solid var(--accent);
@@ -31,7 +50,6 @@
   flex-direction: column;
 }
 
-/* The footer is a page-level region, never a child of the account-card grid. */
 .site-footer {
   display: flex !important;
   position: relative;
@@ -79,9 +97,7 @@
   transition: color .25s ease, opacity .25s ease;
 }
 .site-footer .creator-name:hover,
-.site-footer .creator-name:focus-visible {
-  color: var(--accent) !important;
-}
+.site-footer .creator-name:focus-visible { color: var(--accent) !important; }
 .site-footer .creator-x,
 .site-footer .creator-x:link,
 .site-footer .creator-x:visited,
@@ -133,6 +149,13 @@
 :global(html[data-theme="genz"]) .site-footer .creator-name:focus-visible { color: #ff4fa3 !important; }
 :global(html[data-theme="genz"]) .site-footer .creator-x { background: #bff36b; border: 2px solid #171717; color: #171717 !important; border-radius: 9px; box-shadow: 2px 2px 0 #171717; }
 @media (max-width: 700px) {
+  .heroCta {
+    margin-top: 26px !important;
+    padding: 17px !important;
+    gap: 16px !important;
+    align-items: stretch !important;
+  }
+  .heroCta > div { gap: 6px !important; }
   .heroListBtn { width: 100%; }
   .site-footer { margin-top: auto !important; padding-top: 20px; }
 }
