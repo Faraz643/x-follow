@@ -1,0 +1,111 @@
+.heroListBtn {
+  appearance: none;
+  border: 1px solid var(--accent);
+  background: var(--accent);
+  color: #fff;
+  border-radius: 12px;
+  padding: 11px 16px;
+  min-height: 44px;
+  font-weight: 800;
+  line-height: 1;
+  white-space: nowrap;
+  cursor: pointer;
+  box-shadow: 0 8px 22px color-mix(in srgb, var(--accent) 20%, transparent);
+  transition: transform .22s ease, box-shadow .28s ease, filter .22s ease, background .45s ease, border-color .45s ease;
+}
+.heroListBtn:hover { transform: translateY(-2px); filter: brightness(1.05); box-shadow: 0 12px 28px color-mix(in srgb, var(--accent) 28%, transparent); }
+.heroListBtn:active { transform: translateY(0); }
+.heroListBtn span { color: inherit; }
+
+.fileInput {
+  appearance: none;
+  width: 100%;
+  min-height: 46px;
+  padding: 6px 8px !important;
+  border: 1px solid var(--line) !important;
+  border-radius: 12px !important;
+  background: var(--panel) !important;
+  color: var(--text) !important;
+  cursor: pointer;
+  overflow: hidden;
+}
+.fileInput::file-selector-button {
+  appearance: none;
+  border: 1px solid var(--accent);
+  border-radius: 9px;
+  background: var(--accent);
+  color: #fff;
+  padding: 9px 13px;
+  margin-right: 10px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: filter .2s ease, transform .2s ease, background .4s ease, border-color .4s ease;
+}
+.fileInput::file-selector-button:hover { filter: brightness(1.07); }
+
+.modalScroll {
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in srgb, var(--accent) 72%, var(--line)) transparent;
+  overscroll-behavior: contain;
+}
+.modalScroll::-webkit-scrollbar { width: 9px; }
+.modalScroll::-webkit-scrollbar-track { background: transparent; margin: 12px 0; }
+.modalScroll::-webkit-scrollbar-thumb {
+  background: color-mix(in srgb, var(--accent) 65%, var(--line));
+  border: 2px solid transparent;
+  background-clip: padding-box;
+  border-radius: 999px;
+}
+.modalScroll::-webkit-scrollbar-thumb:hover { background: var(--accent); background-clip: padding-box; }
+
+:global(html[data-theme="ghibli"]) .heroListBtn {
+  background: #4d8b63;
+  border-color: #3f7653;
+  color: #fffdf5;
+  border-radius: 15px;
+  box-shadow: 0 7px 18px rgba(77,139,99,.18);
+}
+:global(html[data-theme="ghibli"]) .heroListBtn:hover { box-shadow: 0 11px 24px rgba(77,139,99,.25); }
+:global(html[data-theme="ghibli"]) .fileInput { background: rgba(255,255,255,.7) !important; border-color: #b8c8aa !important; }
+:global(html[data-theme="ghibli"]) .fileInput::file-selector-button { background: #4d8b63; border-color: #3f7653; border-radius: 11px; }
+
+:global(html[data-theme="cyberpunk"]) .heroListBtn {
+  border-radius: 5px;
+  background: #00e5ff;
+  border-color: #00e5ff;
+  color: #061016;
+  text-transform: uppercase;
+  letter-spacing: .055em;
+  font-family: 'DM Mono', monospace;
+  box-shadow: 0 0 20px rgba(0,229,255,.28);
+  clip-path: polygon(0 0, calc(100% - 7px) 0, 100% 7px, 100% 100%, 7px 100%, 0 calc(100% - 7px));
+}
+:global(html[data-theme="cyberpunk"]) .heroListBtn:hover { box-shadow: 0 0 28px rgba(0,229,255,.42); filter:none; }
+:global(html[data-theme="cyberpunk"]) .fileInput { border-radius: 5px !important; background: rgba(7,14,20,.86) !important; border-color: #263442 !important; color: #8294a5 !important; font-family: 'DM Mono', monospace; }
+:global(html[data-theme="cyberpunk"]) .fileInput::file-selector-button { border-radius: 4px; background: #00e5ff; border-color: #00e5ff; color: #061016; text-transform: uppercase; font-family: 'DM Mono', monospace; letter-spacing: .03em; }
+
+:global(html[data-theme="glass"]) .heroListBtn {
+  border: 1px solid rgba(255,255,255,.3);
+  background: linear-gradient(135deg,#8b7dff,#5de7ff);
+  border-radius: 13px;
+  box-shadow: 0 10px 30px rgba(139,125,255,.3), inset 0 1px rgba(255,255,255,.28);
+  backdrop-filter: blur(16px);
+}
+:global(html[data-theme="glass"]) .heroListBtn:hover { box-shadow: 0 15px 38px rgba(139,125,255,.4), inset 0 1px rgba(255,255,255,.35); filter:none; }
+:global(html[data-theme="glass"]) .fileInput { background: rgba(255,255,255,.08) !important; border-color: rgba(255,255,255,.2) !important; color: #b6bbd2 !important; backdrop-filter: blur(16px); }
+:global(html[data-theme="glass"]) .fileInput::file-selector-button { border-color: rgba(255,255,255,.28); background: linear-gradient(135deg,#8b7dff,#5de7ff); box-shadow: 0 6px 18px rgba(139,125,255,.22); }
+
+:global(html[data-theme="genz"]) .heroListBtn {
+  border: 2px solid #171717;
+  background: #bff36b;
+  color: #171717;
+  border-radius: 11px;
+  box-shadow: 4px 5px 0 #171717;
+}
+:global(html[data-theme="genz"]) .heroListBtn:hover { transform: translate(-2px,-2px); box-shadow: 6px 7px 0 #171717; filter:none; }
+:global(html[data-theme="genz"]) .fileInput { background: #fffdf6 !important; border: 2px solid #171717 !important; border-radius: 11px !important; color: #171717 !important; box-shadow: 3px 3px 0 #171717; }
+:global(html[data-theme="genz"]) .fileInput::file-selector-button { border: 2px solid #171717; background: #ff4f8b; color: #171717; border-radius: 8px; box-shadow: 2px 2px 0 #171717; }
+
+@media (max-width: 700px) {
+  .heroListBtn { width: 100%; }
+}
