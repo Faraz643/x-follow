@@ -10,6 +10,8 @@
   margin: 32px 0 0 !important;
   padding: 0 !important;
   border: 0 !important;
+  border-left: 0 !important;
+  outline: 0 !important;
   background: transparent !important;
   box-shadow: none !important;
   backdrop-filter: none !important;
@@ -18,10 +20,26 @@
   align-items: flex-start !important;
   justify-content: flex-start !important;
   gap: 0 !important;
+  overflow: visible !important;
+}
+
+.heroCta::before,
+.heroCta::after,
+.heroCta > div::before,
+.heroCta > div::after {
+  content: none !important;
+  display: none !important;
+  border: 0 !important;
+  box-shadow: none !important;
 }
 
 .heroCta > div {
   width: 100%;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-left: 0 !important;
+  outline: 0 !important;
 }
 
 .heroCta strong,
@@ -66,9 +84,9 @@
 .fileInput {
   width: 100%;
   padding: 10px;
-  border: 1px solid var(--border);
+  border: 1px solid var(--line);
   border-radius: 14px;
-  background: var(--surface);
+  background: var(--panel);
   color: var(--text);
   font: inherit;
 }
@@ -129,15 +147,16 @@
 .creatorX:active,
 .creatorX:focus,
 .creatorX:focus-visible {
-  color: inherit !important;
+  color: var(--text) !important;
   text-decoration: none !important;
   -webkit-text-decoration: none !important;
-  outline: none;
+  outline: none !important;
 }
 
 .creatorLink:hover,
 .creatorX:hover {
-  opacity: .78;
+  color: var(--accent) !important;
+  opacity: .85;
 }
 
 @media (max-width: 640px) {
