@@ -32,7 +32,7 @@
   box-shadow: none !important;
 }
 
-.heroCta > div {
+.heroCta > div:first-child {
   width: 100%;
   margin: 0 !important;
   padding: 0 !important;
@@ -45,25 +45,33 @@
   margin-bottom: 10px;
 }
 
-.heroCta > div > span {
+.heroCta > div:first-child > span {
   display: block;
   margin-bottom: 12px;
 }
 
-.heroListBtn {
+.heroActions {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  gap: 12px !important;
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.heroListBtn,
+.browseBtn {
   align-self: flex-start;
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
   gap: 10px !important;
-  width: auto !important;
-  min-width: 266px;
   min-height: 64px;
   margin: 0 !important;
   padding: 16px 24px !important;
   border: 0 !important;
   border-radius: 18px !important;
-  background: linear-gradient(135deg, var(--accent), var(--accent2)) !important;
   color: #fff !important;
   font: inherit !important;
   font-size: 20px !important;
@@ -73,13 +81,29 @@
   text-align: center !important;
   text-decoration: none !important;
   cursor: pointer !important;
-  box-shadow: 0 14px 32px color-mix(in srgb, var(--accent) 28%, transparent) !important;
-  transition: transform .2s ease, box-shadow .25s ease, filter .2s ease !important;
+  transition: transform .2s ease, box-shadow .25s ease, filter .2s ease, background .2s ease !important;
   appearance: none !important;
   -webkit-appearance: none !important;
 }
 
-.heroListBtn span {
+.heroListBtn {
+  width: auto !important;
+  min-width: 266px;
+  background: linear-gradient(135deg, var(--accent), var(--accent2)) !important;
+  box-shadow: 0 14px 32px color-mix(in srgb, var(--accent) 28%, transparent) !important;
+}
+
+.browseBtn {
+  width: auto !important;
+  min-width: 210px;
+  background: transparent !important;
+  border: 1px solid color-mix(in srgb, var(--text) 28%, transparent) !important;
+  color: var(--text) !important;
+  box-shadow: none !important;
+}
+
+.heroListBtn span,
+.browseBtn span {
   display: inline !important;
   margin: 0 !important;
   padding: 0 !important;
@@ -88,17 +112,28 @@
   line-height: 1 !important;
 }
 
-.heroListBtn:hover {
+.heroListBtn:hover,
+.browseBtn:hover {
   transform: translateY(-2px) !important;
+}
+
+.heroListBtn:hover {
   filter: brightness(1.06) !important;
   box-shadow: 0 18px 38px color-mix(in srgb, var(--accent) 34%, transparent) !important;
 }
 
-.heroListBtn:active {
+.browseBtn:hover {
+  background: color-mix(in srgb, var(--text) 8%, transparent) !important;
+  border-color: color-mix(in srgb, var(--text) 45%, transparent) !important;
+}
+
+.heroListBtn:active,
+.browseBtn:active {
   transform: translateY(0) !important;
 }
 
-.heroListBtn:focus-visible {
+.heroListBtn:focus-visible,
+.browseBtn:focus-visible {
   outline: 3px solid color-mix(in srgb, var(--accent2) 60%, transparent) !important;
   outline-offset: 3px !important;
 }
@@ -125,6 +160,34 @@ html[data-theme="genz"] .heroListBtn {
   background: linear-gradient(135deg, #b8ff5a, #7be46d) !important;
   color: #10160f !important;
   box-shadow: 6px 7px 0 rgba(16,22,15,.85) !important;
+}
+
+html[data-theme="glass"] .browseBtn {
+  border-color: rgba(255,255,255,.30) !important;
+  background: rgba(255,255,255,.08) !important;
+  color: #f7f7ff !important;
+}
+
+html[data-theme="cyberpunk"] .browseBtn {
+  border-radius: 8px !important;
+  border-color: rgba(0,229,255,.55) !important;
+  color: #00e5ff !important;
+  text-transform: uppercase;
+  letter-spacing: .02em;
+}
+
+html[data-theme="ghibli"] .browseBtn {
+  border-color: rgba(49,93,65,.28) !important;
+  background: rgba(255,255,255,.35) !important;
+  color: #315d41 !important;
+}
+
+html[data-theme="genz"] .browseBtn {
+  border-radius: 14px !important;
+  border: 2px solid #10160f !important;
+  background: #fff !important;
+  color: #10160f !important;
+  box-shadow: 4px 5px 0 rgba(16,22,15,.85) !important;
 }
 
 .modalScroll {
@@ -210,6 +273,14 @@ html[data-theme="genz"] .heroListBtn {
 .creatorX:hover { color: var(--accent) !important; opacity: .85; }
 
 @media (max-width: 640px) {
-  .heroListBtn { min-width: 0; width: 100% !important; }
+  .heroActions {
+    flex-direction: column !important;
+    align-items: stretch !important;
+  }
+  .heroListBtn,
+  .browseBtn {
+    min-width: 0;
+    width: 100% !important;
+  }
   .siteFooter { padding: 36px 16px 24px !important; }
 }
