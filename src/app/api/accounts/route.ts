@@ -1,4 +1,47 @@
-import {NextRequest,NextResponse} from 'next/server';import {z} from 'zod';import {prisma} from '@/lib/prisma';import {getSessionUserId} from '@/lib/auth'
-const schema=z.object({username:z.string().trim().regex(/^@?[A-Za-z0-9_]{1,15}$/),categoryId:z.string().min(1)})
-export async function GET(req:NextRequest){const p=req.nextUrl.searchParams,q=p.get('q')?.trim()||'',category=p.get('category')||undefined,take=Math.min(Math.max(Number(p.get('limit')||24),1),50);return NextResponse.json(await prisma.xAccount.findMany({where:{active:true,...(category?{categories:{some:{category:{slug:category}}}}:{}),...(q?{OR:[{username:{contains:q.replace(/^@/,''),mode:'insensitive'}},{displayName:{contains:q,mode:'insensitive'}},{bio:{contains:q,mode:'insensitive'}}]}:{})},include:{categories:{include:{category:true}}},orderBy:{createdAt:'desc'},take}))}
-export async function POST(req:NextRequest){const userId=await getSessionUserId(req.cookies.get('session')?.value);if(!userId)return NextResponse.json({error:'Sign in with X before adding an account.'},{status:401});const parsed=schema.safeParse(await req.json());if(!parsed.success)return NextResponse.json({error:'Valid X username and category are required.'},{status:400});const {username,categoryId}=parsed.data,handle=username.replace(/^@/,'').toLowerCase();if(!process.env.X_BEARER_TOKEN)return NextResponse.json({error:'X integration is not configured. Add X_BEARER_TOKEN in Vercel.'},{status:503});const response=await fetch(`https://api.x.com/2/users/by/username/${encodeURIComponent(handle)}?user.fields=profile_image_url,description,name,verified,username`,{headers:{Authorization:`Bearer ${process.env.X_BEARER_TOKEN}`},cache:'no-store'});if(!response.ok)return NextResponse.json({error:'X account could not be found.'},{status:422});const x=(await response.json()).data;if(!x)return NextResponse.json({error:'X account not found.'},{status:404});const account=await prisma.xAccount.upsert({where:{username:x.username},update:{xUserId:x.id,displayName:x.name,bio:x.description??null,profileImageUrl:x.profile_image_url??null,profileUrl:`https://x.com/${x.username}`,verified:Boolean(x.verified),active:true},create:{xUserId:x.id,username:x.username,displayName:x.name,bio:x.description??null,profileImageUrl:x.profile_image_url??null,profileUrl:`https://x.com/${x.username}`,verified:Boolean(x.verified),submittedById:userId}});await prisma.accountCategory.upsert({where:{accountId_categoryId:{accountId:account.id,categoryId}},update:{},create:{accountId:account.id,categoryId}});await prisma.submission.upsert({where:{userId_accountId:{userId,accountId:account.id}},update:{categoryId},create:{userId,accountId:account.id,categoryId}});return NextResponse.json(account,{status:201})}
+import { NextRequest, NextResponse } from 'next/server'
+import { z } from 'zod'
+import { prisma } from '@/lib/prisma'
+
+const schema = z.object({
+  username: z.string().trim().regex(/^@?[A-Za-z0-9_]{1,15}$/),
+  profileUrl: z.string().url(),
+  displayName: z.string().trim().min(1).max(80),
+  bio: z.string().trim().max(280).optional().default(''),
+  profileImageUrl: z.string().url().optional().or(z.literal('')).default(''),
+  categoryId: z.string().min(1),
+  email: z.string().email(),
+})
+
+export async function GET(req: NextRequest) {
+  const p = req.nextUrl.searchParams
+  const q = p.get('q')?.trim() || ''
+  const category = p.get('category') || undefined
+  const take = Math.min(Math.max(Number(p.get('limit') || 24), 1), 50)
+  const accounts = await prisma.xAccount.findMany({
+    where: { active: true, ...(category ? { categories: { some: { category: { slug: category } } } } : {}), ...(q ? { OR: [{ username: { contains: q.replace(/^@/, ''), mode: 'insensitive' } }, { displayName: { contains: q, mode: 'insensitive' } }, { bio: { contains: q, mode: 'insensitive' } }] } : {}) },
+    include: { categories: { include: { category: true } } },
+    orderBy: { createdAt: 'desc' }, take,
+  })
+  return NextResponse.json(accounts)
+}
+
+export async function POST(req: NextRequest) {
+  const parsed = schema.safeParse(await req.json())
+  if (!parsed.success) return NextResponse.json({ error: 'Please provide a valid X profile, name, category and email.' }, { status: 400 })
+  const data = parsed.data
+  const handle = data.username.replace(/^@/, '').toLowerCase()
+  const profile = new URL(data.profileUrl)
+  if (!['x.com', 'www.x.com', 'twitter.com', 'www.twitter.com'].includes(profile.hostname.toLowerCase())) return NextResponse.json({ error: 'Profile URL must be an X or Twitter profile URL.' }, { status: 400 })
+  if (profile.pathname.replace(/^\//, '').split('/')[0].toLowerCase() !== handle) return NextResponse.json({ error: 'The username and profile URL do not match.' }, { status: 400 })
+  const category = await prisma.category.findUnique({ where: { id: data.categoryId } })
+  if (!category) return NextResponse.json({ error: 'Category not found.' }, { status: 404 })
+  const user = await prisma.user.upsert({ where: { email: data.email.toLowerCase() }, update: { name: data.displayName }, create: { email: data.email.toLowerCase(), name: data.displayName } })
+  const account = await prisma.xAccount.upsert({
+    where: { username: handle },
+    update: { displayName: data.displayName, bio: data.bio || null, profileImageUrl: data.profileImageUrl || null, profileUrl: `https://x.com/${handle}`, active: true },
+    create: { xUserId: `manual:${handle}`, username: handle, displayName: data.displayName, bio: data.bio || null, profileImageUrl: data.profileImageUrl || null, profileUrl: `https://x.com/${handle}`, submittedById: user.id },
+  })
+  await prisma.accountCategory.upsert({ where: { accountId_categoryId: { accountId: account.id, categoryId: category.id } }, update: {}, create: { accountId: account.id, categoryId: category.id } })
+  await prisma.submission.upsert({ where: { userId_accountId: { userId: user.id, accountId: account.id } }, update: { categoryId: category.id }, create: { userId: user.id, accountId: account.id, categoryId: category.id } })
+  return NextResponse.json(account, { status: 201 })
+}
