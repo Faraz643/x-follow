@@ -1,0 +1,471 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Discover and follow useful X accounts by category." />
+  <title>X Follow — Discover people worth following</title>
+  <style>
+    :root {
+      --bg: #07090d;
+      --panel: rgba(17, 20, 27, .78);
+      --panel-solid: #11141b;
+      --panel-2: #151923;
+      --border: rgba(255,255,255,.09);
+      --text: #f5f7fa;
+      --muted: #9ca4b2;
+      --accent: #39aaf3;
+      --accent-2: #1677ff;
+      --success: #29d391;
+      --danger: #ff6b78;
+      --shadow: 0 22px 70px rgba(0,0,0,.36);
+      --radius-xl: 24px;
+      --radius-lg: 18px;
+      --radius-md: 14px;
+      --max: 1180px;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 85% 0%, rgba(57,170,243,.13), transparent 26%),
+        radial-gradient(circle at 10% 10%, rgba(22,119,255,.10), transparent 25%),
+        var(--bg);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.5;
+    }
+    button, input, select { font: inherit; }
+    button { cursor: pointer; }
+    a { color: inherit; text-decoration: none; }
+
+    .shell { width: min(var(--max), calc(100% - 32px)); margin: 0 auto; }
+    header {
+      position: sticky; top: 0; z-index: 40;
+      backdrop-filter: blur(18px);
+      background: rgba(7,9,13,.78);
+      border-bottom: 1px solid rgba(255,255,255,.06);
+    }
+    .nav {
+      min-height: 72px;
+      display: flex; align-items: center; justify-content: space-between; gap: 16px;
+    }
+    .brand { display: flex; align-items: center; gap: 12px; font-weight: 800; letter-spacing: -.03em; }
+    .brand-mark {
+      width: 38px; height: 38px; border-radius: 12px;
+      display: grid; place-items: center;
+      background: linear-gradient(145deg, #fff, #dce5f2);
+      color: #06080c;
+      font-size: 20px; font-weight: 900;
+      box-shadow: 0 8px 28px rgba(255,255,255,.08);
+    }
+    .nav-actions { display:flex; align-items:center; gap:10px; }
+    .btn {
+      border: 1px solid var(--border);
+      background: var(--panel);
+      color: var(--text);
+      border-radius: 999px;
+      padding: 11px 16px;
+      font-weight: 700;
+      transition: .2s ease;
+    }
+    .btn:hover { transform: translateY(-1px); border-color: rgba(255,255,255,.16); }
+    .btn-primary { background: var(--text); color: #090b10; border-color: transparent; }
+    .btn-primary:hover { box-shadow: 0 8px 24px rgba(255,255,255,.14); }
+
+    .hero { padding: 54px 0 26px; }
+    .eyebrow {
+      display:inline-flex; align-items:center; gap:8px; padding:7px 11px; border-radius:999px;
+      background: rgba(57,170,243,.10); color: #9bd7ff; border: 1px solid rgba(57,170,243,.18);
+      font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: .11em;
+    }
+    .hero h1 {
+      margin: 18px 0 12px; max-width: 820px; font-size: clamp(38px, 6vw, 70px); line-height: .98;
+      letter-spacing: -.055em;
+    }
+    .hero h1 span {
+      background: linear-gradient(120deg, #fff, #87c9f8 60%, #49a9ff);
+      -webkit-background-clip: text; background-clip: text; color: transparent;
+    }
+    .hero p { max-width: 720px; margin: 0; color: var(--muted); font-size: clamp(16px, 2vw, 19px); }
+    .hero-stats { margin-top: 24px; display:flex; flex-wrap:wrap; gap:12px; }
+    .stat { min-width: 150px; padding: 13px 15px; border:1px solid var(--border); border-radius: 16px; background: rgba(255,255,255,.025); }
+    .stat strong { display:block; font-size:20px; }
+    .stat span { color:var(--muted); font-size:13px; }
+
+    .toolbar-wrap { position: sticky; top: 72px; z-index: 20; padding: 10px 0 8px; }
+    .toolbar {
+      display:grid; grid-template-columns: 1.6fr .8fr .8fr auto; gap:10px;
+      padding: 10px; border:1px solid var(--border); background: rgba(12,15,21,.84);
+      border-radius: 18px; box-shadow: var(--shadow); backdrop-filter: blur(16px);
+    }
+    .field, .select {
+      min-height: 46px; width:100%; border-radius: 13px; border:1px solid var(--border);
+      background: #0d1016; color:var(--text); outline:none; padding:0 14px;
+    }
+    .field::placeholder { color:#6f7684; }
+    .field:focus, .select:focus { border-color: rgba(57,170,243,.55); box-shadow: 0 0 0 3px rgba(57,170,243,.08); }
+    .toolbar .btn { border-radius: 13px; min-height:46px; }
+
+    main { padding: 8px 0 70px; }
+    .section-head { display:flex; align-items:end; justify-content:space-between; gap:16px; margin: 22px 0 16px; }
+    .section-head h2 { margin:0; font-size:24px; letter-spacing:-.03em; }
+    .section-head p { margin:3px 0 0; color:var(--muted); font-size:14px; }
+    .results-count { color:var(--muted); font-size:13px; }
+
+    .grid { display:grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap:16px; }
+    .card {
+      position:relative; overflow:hidden; display:flex; flex-direction:column;
+      padding: 20px; min-height: 270px;
+      background: linear-gradient(180deg, rgba(255,255,255,.025), rgba(255,255,255,.012));
+      border:1px solid var(--border); border-radius: var(--radius-lg);
+      transition: transform .22s ease, border-color .22s ease, box-shadow .22s ease;
+    }
+    .card:hover { transform: translateY(-3px); border-color: rgba(255,255,255,.15); box-shadow: 0 18px 45px rgba(0,0,0,.25); }
+    .card-top { display:flex; justify-content:space-between; align-items:flex-start; gap:12px; }
+    .profile { display:flex; gap:13px; align-items:center; min-width:0; }
+    .avatar { width:54px; height:54px; border-radius:50%; object-fit:cover; border:1px solid rgba(255,255,255,.1); background:#1a1f29; }
+    .name-wrap { min-width:0; }
+    .name { font-size:16px; font-weight:800; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .handle { color:var(--muted); font-size:13px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .category { padding:6px 9px; border-radius:999px; font-size:11px; font-weight:800; white-space:nowrap; background: rgba(57,170,243,.10); color:#a4dcff; border:1px solid rgba(57,170,243,.16); }
+    .bio { color:#c1c7d2; font-size:14px; line-height:1.65; margin:18px 0; flex:1; }
+    .meta { display:flex; align-items:center; justify-content:space-between; gap:12px; color:var(--muted); font-size:12px; padding-top:13px; border-top:1px solid rgba(255,255,255,.06); }
+    .follow {
+      display:inline-flex; align-items:center; justify-content:center; gap:8px; width:100%; margin-top:14px;
+      padding:11px 14px; border-radius:12px; border:1px solid rgba(255,255,255,.12);
+      background:#f4f6f9; color:#0b0e13; font-weight:800; transition:.2s ease;
+    }
+    .follow:hover { transform: translateY(-1px); box-shadow:0 10px 25px rgba(255,255,255,.10); }
+
+    .empty { display:none; padding:48px 20px; border:1px dashed rgba(255,255,255,.14); border-radius:20px; text-align:center; color:var(--muted); }
+    .empty h3 { color:var(--text); margin:0 0 8px; }
+
+    .modal-backdrop {
+      position:fixed; inset:0; z-index:60; display:none; place-items:center; padding:18px;
+      background:rgba(2,4,7,.75); backdrop-filter:blur(8px);
+    }
+    .modal-backdrop.open { display:grid; }
+    .modal { width:min(560px,100%); background:var(--panel-solid); border:1px solid var(--border); border-radius:24px; box-shadow:0 30px 90px rgba(0,0,0,.55); overflow:hidden; }
+    .modal-head { display:flex; justify-content:space-between; gap:12px; align-items:center; padding:20px 20px 14px; }
+    .modal-head h3 { margin:0; font-size:20px; }
+    .icon-btn { width:38px; height:38px; border-radius:12px; border:1px solid var(--border); background:#0d1016; color:var(--text); }
+    .modal-body { padding:0 20px 20px; }
+    .form-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+    .form-field { display:flex; flex-direction:column; gap:7px; }
+    .form-field.full { grid-column:1/-1; }
+    label { font-size:12px; font-weight:800; color:#cdd3dc; }
+    textarea.field { min-height:100px; padding:12px 14px; resize:vertical; }
+    .modal-footer { display:flex; justify-content:flex-end; gap:10px; padding-top:16px; }
+    .hint { margin:10px 0 0; color:#777f8d; font-size:11px; }
+
+    .toast { position:fixed; left:50%; bottom:22px; transform:translate(-50%, 20px); z-index:80; opacity:0; pointer-events:none; padding:11px 14px; border-radius:12px; background:#eef4fa; color:#0a0d12; font-weight:800; font-size:13px; box-shadow:0 10px 35px rgba(0,0,0,.35); transition:.25s ease; }
+    .toast.show { opacity:1; transform:translate(-50%,0); }
+
+    footer { border-top:1px solid rgba(255,255,255,.06); padding:28px 0 45px; color:#707887; font-size:12px; }
+
+    @media (max-width: 980px) {
+      .grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+      .toolbar { grid-template-columns:1fr 1fr; }
+      .toolbar .search { grid-column:1/-1; }
+    }
+    @media (max-width: 680px) {
+      .shell { width:min(var(--max), calc(100% - 20px)); }
+      .nav { min-height:64px; }
+      .toolbar-wrap { top:64px; }
+      .nav-actions .desktop-only { display:none; }
+      .hero { padding-top:34px; }
+      .hero-stats { display:grid; grid-template-columns:1fr 1fr; }
+      .grid { grid-template-columns:1fr; }
+      .toolbar { grid-template-columns:1fr; }
+      .toolbar .search { grid-column:auto; }
+      .section-head { align-items:flex-start; flex-direction:column; }
+      .form-grid { grid-template-columns:1fr; }
+      .form-field.full { grid-column:auto; }
+    }
+    @media (max-width: 430px) {
+      .brand span { display:none; }
+      .hero h1 { font-size:42px; }
+      .hero-stats { grid-template-columns:1fr; }
+      .stat { min-width:0; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="shell nav">
+      <a class="brand" href="#top" aria-label="X Follow home">
+        <div class="brand-mark">𝕏</div><span>X Follow</span>
+      </a>
+      <div class="nav-actions">
+        <a class="btn desktop-only" href="#directory">Browse accounts</a>
+        <button class="btn btn-primary" id="openModal">+ Add X account</button>
+      </div>
+    </div>
+  </header>
+
+  <div id="top" class="shell">
+    <section class="hero">
+      <div class="eyebrow">Community-powered X directory</div>
+      <h1>Find <span>people worth following</span> on X.</h1>
+      <p>Discover engineers, builders, researchers, creators, founders and operators by category — then follow them directly on X.</p>
+      <div class="hero-stats">
+        <div class="stat"><strong id="statAccounts">0</strong><span>accounts listed</span></div>
+        <div class="stat"><strong id="statCategories">0</strong><span>categories</span></div>
+        <div class="stat"><strong>1-click</strong><span>follow flow to X</span></div>
+      </div>
+    </section>
+
+    <div id="directory" class="toolbar-wrap">
+      <div class="toolbar">
+        <input id="search" class="field search" placeholder="Search name, @username, bio or category…" autocomplete="off" />
+        <select id="category" class="select" aria-label="Filter category"><option value="all">All categories</option></select>
+        <select id="sort" class="select" aria-label="Sort accounts">
+          <option value="recommended">Recommended</option>
+          <option value="recent">Recently added</option>
+          <option value="name">Name A–Z</option>
+        </select>
+        <button id="clearBtn" class="btn">Clear</button>
+      </div>
+    </div>
+
+    <main>
+      <div class="section-head">
+        <div>
+          <h2>Explore X accounts</h2>
+          <p>Hand-picked profiles grouped around useful topics.</p>
+        </div>
+        <div id="resultsCount" class="results-count"></div>
+      </div>
+      <section id="grid" class="grid" aria-live="polite"></section>
+      <section id="empty" class="empty">
+        <h3>No accounts found</h3>
+        <p>Try another search term or category, or add the first account for this topic.</p>
+      </section>
+    </main>
+
+    <footer>
+      X Follow is a discovery layer. Account profile data shown here is community-provided in this demo; production deployments should validate/sync X profile data through the appropriate X API/OAuth flow.
+    </footer>
+  </div>
+
+  <div id="modalBackdrop" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal">
+      <div class="modal-head">
+        <h3 id="modalTitle">Add an X account</h3>
+        <button class="icon-btn" id="closeModal" aria-label="Close">✕</button>
+      </div>
+      <div class="modal-body">
+        <form id="accountForm">
+          <div class="form-grid">
+            <div class="form-field full">
+              <label for="xUrl">X profile URL</label>
+              <input id="xUrl" class="field" placeholder="https://x.com/username" required />
+            </div>
+            <div class="form-field">
+              <label for="displayName">Name</label>
+              <input id="displayName" class="field" placeholder="Jane Doe" required />
+            </div>
+            <div class="form-field">
+              <label for="username">Username</label>
+              <input id="username" class="field" placeholder="@janedoe" required />
+            </div>
+            <div class="form-field full">
+              <label for="avatar">Profile image URL</label>
+              <input id="avatar" class="field" placeholder="https://…" />
+            </div>
+            <div class="form-field">
+              <label for="newCategory">Category</label>
+              <input id="newCategory" class="field" placeholder="Engineering" required />
+            </div>
+            <div class="form-field">
+              <label for="bio">Bio</label>
+              <input id="bio" class="field" placeholder="Builder, engineer…" required />
+            </div>
+            <div class="form-field full">
+              <label for="description">Short description (optional)</label>
+              <textarea id="description" class="field" placeholder="Why is this account worth following?"></textarea>
+            </div>
+          </div>
+          <p class="hint">Demo behavior: entries are saved in your browser. In production, send the account URL to your backend for validation and X profile sync.</p>
+          <div class="modal-footer">
+            <button type="button" class="btn" id="cancelModal">Cancel</button>
+            <button type="submit" class="btn btn-primary">Add account</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast" role="status"></div>
+
+  <script>
+    const seedAccounts = [
+      { id:'1', name:'Andrew Ng', username:'@AndrewYNg', category:'AI & Machine Learning', bio:'AI educator, entrepreneur and founder focused on making machine learning practical and accessible.', avatar:'https://unavatar.io/twitter/AndrewYNg', xUrl:'https://x.com/AndrewYNg', added: 10, score: 99 },
+      { id:'2', name:'Simon Willison', username:'@simonw', category:'AI & Open Source', bio:'Creator of Datasette. Writes about AI-assisted programming, data tools and open source.', avatar:'https://unavatar.io/twitter/simonw', xUrl:'https://x.com/simonw', added: 9, score: 98 },
+      { id:'3', name:'Guillermo Rauch', username:'@rauchg', category:'Web & Developer Tools', bio:'Builder and CEO sharing the future of the web, JavaScript, infrastructure and developer experience.', avatar:'https://unavatar.io/twitter/rauchg', xUrl:'https://x.com/rauchg', added: 8, score: 97 },
+      { id:'4', name:'Addy Osmani', username:'@addyosmani', category:'Web Performance', bio:'Engineering leader focused on web performance, tooling and making the web faster for everyone.', avatar:'https://unavatar.io/twitter/addyosmani', xUrl:'https://x.com/addyosmani', added: 7, score: 95 },
+      { id:'5', name:'Lenny Rachitsky', username:'@lennysan', category:'Product & Growth', bio:'Writes and podcasts about product, growth, startups and lessons from product leaders.', avatar:'https://unavatar.io/twitter/lennysan', xUrl:'https://x.com/lennysan', added: 6, score: 94 },
+      { id:'6', name:'Paul Graham', username:'@paulg', category:'Startups', bio:'Essays on startups, founders, technology, ambition and building enduring companies.', avatar:'https://unavatar.io/twitter/paulg', xUrl:'https://x.com/paulg', added: 5, score: 93 },
+      { id:'7', name:'Patrick Collison', username:'@patrickc', category:'Technology & Business', bio:'Technology, science, company building and ideas that can have outsized impact.', avatar:'https://unavatar.io/twitter/patrickc', xUrl:'https://x.com/patrickc', added: 4, score: 92 },
+      { id:'8', name:'Kelsey Hightower', username:'@kelseyhightower', category:'Cloud & Infrastructure', bio:'Engineer, speaker and educator known for simplifying cloud-native infrastructure.', avatar:'https://unavatar.io/twitter/kelseyhightower', xUrl:'https://x.com/kelseyhightower', added: 3, score: 91 },
+      { id:'9', name:'Hussein Nasser', username:'@hnasr', category:'Backend & Databases', bio:'Backend engineering, networking, databases, distributed systems and practical architecture.', avatar:'https://unavatar.io/twitter/hnasr', xUrl:'https://x.com/hnasr', added: 2, score: 90 }
+    ];
+
+    const storageKey = 'x-follow-accounts-v1';
+    const state = { accounts: loadAccounts() };
+
+    const grid = document.getElementById('grid');
+    const empty = document.getElementById('empty');
+    const search = document.getElementById('search');
+    const category = document.getElementById('category');
+    const sort = document.getElementById('sort');
+    const clearBtn = document.getElementById('clearBtn');
+    const resultsCount = document.getElementById('resultsCount');
+    const statAccounts = document.getElementById('statAccounts');
+    const statCategories = document.getElementById('statCategories');
+    const modalBackdrop = document.getElementById('modalBackdrop');
+    const accountForm = document.getElementById('accountForm');
+    const toast = document.getElementById('toast');
+
+    function loadAccounts() {
+      try {
+        const saved = JSON.parse(localStorage.getItem(storageKey));
+        return Array.isArray(saved) && saved.length ? saved : seedAccounts;
+      } catch {
+        return seedAccounts;
+      }
+    }
+
+    function saveAccounts() {
+      localStorage.setItem(storageKey, JSON.stringify(state.accounts));
+    }
+
+    function categories() {
+      return [...new Set(state.accounts.map(a => a.category).filter(Boolean))].sort((a,b)=>a.localeCompare(b));
+    }
+
+    function populateCategories() {
+      const current = category.value;
+      category.innerHTML = '<option value="all">All categories</option>' + categories().map(c => `<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`).join('');
+      category.value = categories().includes(current) ? current : 'all';
+    }
+
+    function escapeHtml(value='') {
+      return String(value).replace(/[&<>"']/g, s => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[s]));
+    }
+
+    function render() {
+      populateCategories();
+      const q = search.value.trim().toLowerCase();
+      const cat = category.value;
+      let items = state.accounts.filter(a => {
+        const hay = `${a.name} ${a.username} ${a.bio} ${a.category} ${a.description || ''}`.toLowerCase();
+        return (!q || hay.includes(q)) && (cat === 'all' || a.category === cat);
+      });
+
+      if (sort.value === 'name') items.sort((a,b) => a.name.localeCompare(b.name));
+      else if (sort.value === 'recent') items.sort((a,b) => (b.added || 0) - (a.added || 0));
+      else items.sort((a,b) => (b.score || 0) - (a.score || 0));
+
+      resultsCount.textContent = `${items.length} account${items.length === 1 ? '' : 's'}`;
+      statAccounts.textContent = state.accounts.length;
+      statCategories.textContent = categories().length;
+      empty.style.display = items.length ? 'none' : 'block';
+      grid.innerHTML = items.map(cardTemplate).join('');
+    }
+
+    function cardTemplate(a) {
+      const avatar = a.avatar || `https://unavatar.io/twitter/${a.username.replace('@','')}`;
+      return `
+        <article class="card">
+          <div class="card-top">
+            <div class="profile">
+              <img class="avatar" src="${escapeHtml(avatar)}" alt="${escapeHtml(a.name)} profile picture" loading="lazy" onerror="this.src='https://api.dicebear.com/9.x/initials/svg?seed=${encodeURIComponent(a.name)}&backgroundColor=1b2330'" />
+              <div class="name-wrap">
+                <div class="name" title="${escapeHtml(a.name)}">${escapeHtml(a.name)}</div>
+                <div class="handle" title="${escapeHtml(a.username)}">${escapeHtml(a.username)}</div>
+              </div>
+            </div>
+            <div class="category">${escapeHtml(a.category)}</div>
+          </div>
+          <div class="bio">${escapeHtml(a.description || a.bio)}</div>
+          <div class="meta"><span>${escapeHtml(a.bio || 'X account')}</span><span>↗</span></div>
+          <a class="follow" href="${escapeHtml(a.xUrl)}" target="_blank" rel="noopener noreferrer">Follow on X ↗</a>
+        </article>`;
+    }
+
+    function openModal() {
+      modalBackdrop.classList.add('open');
+      document.getElementById('xUrl').focus();
+    }
+    function closeModal() {
+      modalBackdrop.classList.remove('open');
+      accountForm.reset();
+    }
+    function showToast(message) {
+      toast.textContent = message;
+      toast.classList.add('show');
+      clearTimeout(showToast.timer);
+      showToast.timer = setTimeout(() => toast.classList.remove('show'), 2400);
+    }
+
+    document.getElementById('openModal').addEventListener('click', openModal);
+    document.getElementById('closeModal').addEventListener('click', closeModal);
+    document.getElementById('cancelModal').addEventListener('click', closeModal);
+    modalBackdrop.addEventListener('click', e => { if (e.target === modalBackdrop) closeModal(); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+    [search, category, sort].forEach(el => el.addEventListener('input', render));
+    clearBtn.addEventListener('click', () => {
+      search.value = '';
+      category.value = 'all';
+      sort.value = 'recommended';
+      render();
+    });
+
+    accountForm.addEventListener('submit', e => {
+      e.preventDefault();
+      const xUrl = document.getElementById('xUrl').value.trim();
+      const displayName = document.getElementById('displayName').value.trim();
+      const usernameRaw = document.getElementById('username').value.trim();
+      const avatar = document.getElementById('avatar').value.trim();
+      const newCategory = document.getElementById('newCategory').value.trim();
+      const bio = document.getElementById('bio').value.trim();
+      const description = document.getElementById('description').value.trim();
+
+      if (!/^https:\/\/(www\.)?(x\.com|twitter\.com)\/[A-Za-z0-9_]+/.test(xUrl)) {
+        showToast('Please enter a valid X profile URL.');
+        return;
+      }
+      const username = usernameRaw.startsWith('@') ? usernameRaw : `@${usernameRaw}`;
+      const duplicate = state.accounts.some(a => a.username.toLowerCase() === username.toLowerCase());
+      if (duplicate) {
+        showToast('That X username is already listed.');
+        return;
+      }
+
+      state.accounts.unshift({
+        id: crypto.randomUUID ? crypto.randomUUID() : String(Date.now()),
+        name: displayName,
+        username,
+        category: newCategory,
+        bio,
+        description: description || bio,
+        avatar: avatar || `https://unavatar.io/twitter/${username.replace('@','')}`,
+        xUrl,
+        added: Date.now(),
+        score: 89
+      });
+      saveAccounts();
+      closeModal();
+      render();
+      showToast('X account added to the directory.');
+    });
+
+    render();
+  </script>
+</body>
+</html>
